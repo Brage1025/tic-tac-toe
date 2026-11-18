@@ -1,55 +1,43 @@
 # Tic-Tac-Toe
 
-A small tic-tac-toe game with both a Python console version and a browser
-version.
+A simple tic-tac-toe game to play in your browser or in the Python console.
 
-## Play locally
+**[Play online](https://brage1025.github.io/tic-tac-toe/)** (available after
+the first successful GitHub Pages deployment).
 
-Open `index.html` directly in your web browser. It has no dependencies or build
-step.
+## Browser game
 
-You can also start a local server from this folder:
+- You play as **O**; the computer plays as **X** and starts in the center.
+- Select an empty square to make a move.
+- Choose **New game** to start over.
+
+Open [`index.html`](index.html) in a browser to play locally. No installation
+or build tools are needed. Alternatively, start a local web server:
 
 ```powershell
 py -m http.server 8000
 ```
 
-Then visit <http://localhost:8000>.
+Then open <http://localhost:8000>.
 
-## Publish with GitHub Pages
+## Python console game
 
-The site is a static webpage, so GitHub Pages can serve it without a build
-step. The workflow in `.github/workflows/pages.yml` deploys the repository when
-you push to `main`.
-
-1. Create an empty repository on GitHub (do not add a README or other files).
-2. From this folder, initialize Git and push the project. Replace the URL with
-   your repository's URL:
-
-   ```powershell
-   git init
-   git add .
-   git commit -m "Initial tic-tac-toe game"
-   git branch -M main
-   git remote add origin https://github.com/<YOUR-USERNAME>/<YOUR-REPOSITORY>.git
-   git push -u origin main
-   ```
-
-3. In the GitHub repository, open **Settings → Pages** and set the build and
-   deployment source to **GitHub Actions**.
-4. Open the **Actions** tab and wait for **Deploy to GitHub Pages** to finish.
-   The workflow summary shows the published site URL.
-
-Subsequent pushes to `main` deploy automatically. You can also run the workflow
-manually from the **Actions** tab.
-
-## Play in the console
-
-Run:
+Run the game with Python:
 
 ```powershell
 py tic_tac_toe.py
 ```
 
-The computer starts in the center. Enter a number from 1 to 9 to place `O`;
-the number corresponds to the square position shown by the console board.
+Enter a number from 1 to 9 to place **O**. The numbers represent the squares
+from left to right, top to bottom. The computer plays **X**.
+
+## GitHub Pages
+
+This repository deploys the static browser game to GitHub Pages using GitHub
+Actions. Push changes to `main` to publish them. To check a deployment, open
+the repository's **Actions** tab; when it succeeds, the game is available at
+the link above.
+
+## License
+
+This project is available under the [MIT License](LICENSE).
