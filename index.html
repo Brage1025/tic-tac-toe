@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic-Tac-Toe</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background: #111827;
+        color: #f9fafb;
+      }
+
+      main {
+        text-align: center;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+      }
+
+      #status {
+        min-height: 1.5rem;
+        margin: 0.75rem 0;
+        font-weight: bold;
+      }
+
+      #board {
+        width: min(300px, 90vw);
+        aspect-ratio: 1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .square {
+        border: 2px solid #60a5fa;
+        border-radius: 10px;
+        background: #1f2937;
+        color: #f9fafb;
+        font-size: clamp(2.5rem, 15vw, 4.5rem);
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .square:hover:enabled {
+        background: #374151;
+      }
+
+      .square:disabled {
+        cursor: default;
+        opacity: 1;
+      }
+
+      #reset {
+        margin-top: 1rem;
+        padding: 0.65rem 1.25rem;
+        border: 0;
+        border-radius: 8px;
+        background: #2563eb;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Tic-Tac-Toe</h1>
+      <p id="status" aria-live="polite">Your turn (O)</p>
+      <div id="board" role="grid" aria-label="Tic-tac-toe board"></div>
+      <button id="reset" type="button">New game</button>
+    </main>
+
+    <script>
+      const boardElement = document.querySelector("#board");
+      const statusElement = document.querySelector("#status");
+      const resetElement = document.querySelector("#reset");
+      let board = Array(9).fill("");
+      let gameOver = false;
+
+      const winningLines = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+
+      function winner() {
+        for (const line of winningLines) {
+          const [a, b, c] = line;
+          if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return board[a];
+          }
+        }
+        return null;
+      }
+
+      function render() {
+        boardElement.replaceChildren();
+
+        board.forEach((value, index) => {
+          const square = document.createElement("button");
+          square.className = "square";
+          square.type = "button";
+          square.textContent = value;
+          square.setAttribute("role", "gridcell");
+          square.setAttribute("aria-label", value ? `Square ${index + 1}: ${value}` : `Square ${index + 1}: empty`);
+          square.disabled = Boolean(value) || gameOver;
+          square.addEventListener("click", () => makeMove(index));
+          boardElement.appendChild(square);
+        });
+      }
+
+      function makeMove(index) {
+        if (gameOver || board[index]) return;
+
+        board[index] = "O";
+        let result = winner();
+
+        if (result) {
+          endGame("You won!");
+        } else if (board.every(Boolean)) {
+          endGame("It's a tie!");
+        } else {
+          statusElement.textContent = "Computer is thinking...";
+          render();
+          window.setTimeout(computerMove, 350);
+        }
+      }
+
+      function computerMove() {
+        const free = board
+          .map((value, index) => value ? null : index)
+          .filter((index) => index !== null);
+
+        if (free.length) {
+          const index = free[Math.floor(Math.random() * free.length)];
+          board[index] = "X";
+        }
+
+        const result = winner();
+        if (result) {
+          endGame("The computer won!");
+        } else if (board.every(Boolean)) {
+          endGame("It's a tie!");
+        } else {
+          statusElement.textContent = "Your turn (O)";
+          render();
+        }
+      }
+
+      function endGame(message) {
+        gameOver = true;
+        statusElement.textContent = message;
+        render();
+      }
+
+      function newGame() {
+        board = Array(9).fill("");
+        board[4] = "X";
+        gameOver = false;
+        statusElement.textContent = "Your turn (O)";
+        render();
+      }
+
+      resetElement.addEventListener("click", newGame);
+      newGame();
+    </script>
+  </body>
+</html>
